@@ -2,93 +2,92 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <title>Quoth the Giphy</title>
+    <meta charset="utf-8">
+    <title>Giphy!</title>
 </head>
 
 <body>
-  <button data-person="Dogs">Dogs</button>
-  <button data-person="Cats">
-    Cats
-  </button>
-  <!-- STEP TWO: between the dashed lines below
-        * add three more buttons
-        * add a data-person attribute of famous people you know
-        * with a quote said by them -->
 
-  <!--  -->
 
-  <button data-person="Turtles">
-            Turtles
-</button>
-  <button data-person="Tigers">
-    Tigers
-  </button>
-  <button data-person="Bears">
-    Bears
-  </button>
 
-  <input type="text" placeholder="Search.." name="search">
-  <button type="submit">Search</button>
+    <input id="searchBar" type="text" placeholder="Search.." name="search">
+    <button id="searchButton">Search</button>
+    <div id="buttonDisplay"></div>
+    <div id="gifs-appear-here"></div>
 
-  <div id="gifs-appear-here">
-  </div>
 
-  
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script type="text/javascript">
-    // Event listener for all button elements
-    $("button").on("click", function() {
-      // In this case, the "this" keyword refers to the button that was clicked
-      var person = $(this).attr("data-person");
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
 
-      // Constructing a URL to search Giphy for the name of the person who said the quote
-      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-        person + "&api_key=dc6zaTOxFJmzC&limit=10";
 
-      // Performing our AJAX GET request
-      $.ajax({
-        url: queryURL,
-        method: "GET"
-      })
-        // After the data comes back from the API
-        .then(function(response) {
-          // Storing an array of results in the results variable
-          var results = response.data;
+        var searchArray = ["dogs", "cats"];
 
-          // Looping over every result item
-          for (var i = 0; i < results.length; i++) {
+        $("button").on("click", function () {
 
-            // Only taking action if the photo has an appropriate rating
-            if (results[i].rating !== "r" && results[i].rating !== "pg-13") {
-              // Creating a div for the gif
-              var gifDiv = $("<div>");
+        var buttonArray = $(this).attr("data-person");
 
-              // Storing the result item's rating
-              var rating = results[i].rating;
+            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+                buttonArray + "&api_key=dc6zaTOxFJmzC&limit=10";
 
-              // Creating a paragraph tag with the result item's rating
-              var p = $("<p>").text("Rating: " + rating);
+            console.log(searchArray);
 
-              // Creating an image tag
-              var personImage = $("<img>");
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            })
+                .then(function (response) {
 
-              // Giving the image tag an src attribute of a proprty pulled off the
-              // result item
-              personImage.attr("src", results[i].images.fixed_height.url);
+                    console.log(response);
 
-              // Appending the paragraph and personImage we created to the "gifDiv" div we created
-              gifDiv.append(p);
-              gifDiv.append(personImage);
+                    var results = response.data;
 
-              // Prepending the gifDiv to the "#gifs-appear-here" div in the HTML
-              $("#gifs-appear-here").prepend(gifDiv);
-            }
-          }
+
+
+                    for (var i = 0; i < results.length; i++) {
+
+                        var gifDiv = $("<div>");
+
+                        var rating = results[i].rating;
+
+                        var p = $("<p>").text("Rating: " + rating);
+
+                        var personImage = $("<img>");
+
+                        personImage.attr("src", results[i].images.fixed_height.url);
+
+                        gifDiv.append(p);
+
+                        gifDiv.append(personImage);
+
+                        $("#gifs-appear-here").prepend(gifDiv);
+                    }
+                });
         });
-    });
-  </script>
+
+
+        function showButtons () {
+
+
+
+        }
+
+        function addButton() {
+
+            searchArray.push(buttonArray);
+
+            var newButton = $("<button>");
+
+            $("#buttonDisplay").html("<button data-person+" + searchArray[i] + "></button>")
+        }
+
+
+       // $(document).ready(function() {
+
+        //}
+
+    
+    </script>
 </body>
 
 </html>
