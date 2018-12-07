@@ -21,11 +21,12 @@
     <script type="text/javascript">
 
 
-        var searchArray = ["dogs", "cats"];
+        var searchArray = [];
+        var initialArray = ["dogs", "cats"];
 
         $("button").on("click", function () {
 
-        var buttonArray = $(this).attr("data-person");
+        var buttonArray = $("#searchBar").val();
 
             var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
                 buttonArray + "&api_key=dc6zaTOxFJmzC&limit=10";
