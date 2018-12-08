@@ -4,6 +4,9 @@
 <head>
     <meta charset="utf-8">
     <title>Giphy!</title>
+    <script type="text/javascript" src="bower_components/jquery.gifplayer/dist/jquery.gifplayer.js"></script>
+    <link rel="stylesheet" type="text/css" href="bower_components/jquery.gifplayer/dist/gifplayer.css">
+
 </head>
 
 <body>
@@ -21,73 +24,95 @@
     <script type="text/javascript">
 
 
-        var searchArray = [];
-        var initialArray = ["dogs", "cats"];
 
-        $("button").on("click", function () {
+        //empty variables and inital button array
+        var searchArray = ["dogs", "cats", "turtles", "bird", "giraffe"];
+        var j;
+        var buttonArray;
+        var person;
+        var gifDiv;
+        //waits for dom to load before loading the script
+        $(document).ready(function () {
 
-        var buttonArray = $("#searchBar").val();
 
-            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-                buttonArray + "&api_key=dc6zaTOxFJmzC&limit=10";
 
-            console.log(searchArray);
+            //creates a new button for each inital item in the array.
+            for (j = 0; j < searchArray.length; j++) {
+                $("#buttonDisplay").append("<button class=newButton type=button data-person=" + searchArray[j] + ">" + searchArray[j] + "</button>");
 
-            $.ajax({
-                url: queryURL,
-                method: "GET"
+            }
+            /*when the search button is clicked, it gets the string in the input box and pushes it 
+            into the searchArray. then it creates and appends a new button to the dom*/
+            $("#searchButton").on("click", function () {
+                buttonArray = $("#searchBar").val();
+                searchArray.push(buttonArray);
+                $("#buttonDisplay").append("<button class=newButton type=button data-person=" + searchArray[j] + ">" + searchArray.slice(-1).pop() + "</button>");
+                $("#buttonDisplay > button:nth-child(" + (j + 1) + ")").on("click", function () {
+                    person = $(this).attr("data-person");
+                    printGifs();
+
+
+                })
+                person = $("#searchBar").val();
+                printGifs();
+            });
+
+
+
+
+            $(".newButton").on("click", function () {
+
+                person = $(this).attr("data-person");
+                printGifs();
+
+            
             })
-                .then(function (response) {
 
-                    console.log(response);
+            function printGifs() {
 
-                    var results = response.data;
+                var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+                    person + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+                $.ajax({
+                    url: queryURL,
+                    method: "GET"
+                })
+                    .then(function (response) {
+
+                        var results = response.data;
+
+                        for (var i = 0; i < results.length; i++) {
+
+                            gifDiv = $("<div>");
+
+                            var rating = results[i].rating;
+
+                            var p = $("<p>").text("Rating: " + rating);
+
+                            var personImage = $("<img>");
+
+                            personImage.attr("src", results[i].images.fixed_height.url);
+
+                            gifDiv.append(p);
+
+                            gifDiv.append(personImage);
+
+                            $("#gifs-appear-here").prepend(gifDiv);
+                        }
+                    });
+            }
+
+            $("#buttonDisplay").on("click", function () {
+                    gifDiv.gifPlayer("stop");
+                
+
+            })
 
 
 
-                    for (var i = 0; i < results.length; i++) {
 
-                        var gifDiv = $("<div>");
-
-                        var rating = results[i].rating;
-
-                        var p = $("<p>").text("Rating: " + rating);
-
-                        var personImage = $("<img>");
-
-                        personImage.attr("src", results[i].images.fixed_height.url);
-
-                        gifDiv.append(p);
-
-                        gifDiv.append(personImage);
-
-                        $("#gifs-appear-here").prepend(gifDiv);
-                    }
-                });
         });
 
-
-        function showButtons () {
-
-
-
-        }
-
-        function addButton() {
-
-            searchArray.push(buttonArray);
-
-            var newButton = $("<button>");
-
-            $("#buttonDisplay").html("<button data-person+" + searchArray[i] + "></button>")
-        }
-
-
-       // $(document).ready(function() {
-
-        //}
-
-    
     </script>
 </body>
 
